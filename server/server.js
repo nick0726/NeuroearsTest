@@ -1,9 +1,7 @@
 const express = require("express");
 const app = express();
 const dotenv = require("dotenv").config();
-const port =
-  process.env.PORT ||
-  "http://neuroearstest.s3-website.ap-northeast-2.amazonaws.com";
+const port = process.env.PORT || "3000";
 const path = require("path");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -34,9 +32,9 @@ mongoose.connect(
 );
 
 const http = require("http").createServer(app);
-http.listen(port, () => {
-  console.log(`${port}에 포트열림 서버 오픈 완료`);
-});
+// http.listen(port, () => {
+//   console.log(`${port}에 포트열림 서버 오픈 완료`);
+// });
 
 app.use("/", express.static(path.join(__dirname, "../client/build")));
 
