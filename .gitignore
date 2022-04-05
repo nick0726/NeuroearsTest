@@ -149,5 +149,4 @@ sketch
 .DS_Store
 .env
 
-server/
 build/
