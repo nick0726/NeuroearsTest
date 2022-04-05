@@ -22,7 +22,7 @@ app.use(
       "http://neuroearstest.s3-website.ap-northeast-2.amazonaws.com",
     ],
     credentials: true,
-    methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+    methods: ["GET", "POST"],
   })
 );
 
