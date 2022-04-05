@@ -1,12 +1,12 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const dotenv = require('dotenv').config();
+const dotenv = require("dotenv").config();
 const port = process.env.PORT || 3000;
-const path = require('path');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const User = require('./models/user.models');
-const jwt = require('jsonwebtoken');
+const path = require("path");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const User = require("./models/user.models");
+const jwt = require("jsonwebtoken");
 
 // const generateToken = (id) => {
 //   return jwt.sign({ id }, process.env.JWT_SCRET, {
@@ -14,26 +14,35 @@ const jwt = require('jsonwebtoken');
 //   });
 // };
 
-app.use(cors());
 app.use(express.json());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://neuroearstest.s3-website.ap-northeast-2.amazonaws.com",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+  })
+);
 
 mongoose.connect(
-  'mongodb+srv://nick0726:qweR1234@cluster0.yzv2q.mongodb.net/neuroears?retryWrites=true&w=majority',
+  "mongodb+srv://nick0726:qweR1234@cluster0.yzv2q.mongodb.net/neuroears?retryWrites=true&w=majority",
   { useNewUrlParser: true }
 );
 
-const http = require('http').createServer(app);
+const http = require("http").createServer(app);
 http.listen(port, () => {
   console.log(`${port}에 포트열림 서버 오픈 완료`);
 });
 
-app.use('/', express.static(path.join(__dirname, '../client/build')));
+app.use("/", express.static(path.join(__dirname, "../client/build")));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
-app.post('/signup', async (req, res) => {
+app.post("/signup", async (req, res) => {
   console.log(req.body);
   try {
     await User.create({
@@ -45,14 +54,14 @@ app.post('/signup', async (req, res) => {
     });
     // var temp = User.create();
     // console.log(temp);
-    res.json({ status: 'ok' });
+    res.json({ status: "ok" });
   } catch (err) {
     // console.log(err);
-    res.json({ status: 'error', error: 'Duplicate id or email' });
+    res.json({ status: "error", error: "Duplicate id or email" });
   }
 });
 
-app.post('/login', async (req, res) => {
+app.post("/login", async (req, res) => {
   const user = await User.findOne({
     id: req.body.id,
     password: req.body.password,
@@ -69,28 +78,28 @@ app.post('/login', async (req, res) => {
       `scret${dotenv.JWT_SCRET}`
     );
     return res.json({
-      status: 'ok',
+      status: "ok",
       user: token,
     });
   } else {
     return res.json({
-      status: 'error',
+      status: "error",
       user: false,
     });
   }
 });
 
-app.get('/login', async (req, res) => {
-  const token = req.headers['x-acces-token'];
+app.get("/login", async (req, res) => {
+  const token = req.headers["x-acces-token"];
 
   try {
     const decoded = jwt.verify(token, `scret${dotenv.JWT_SCRET}`);
     const id = decoded.id;
     // const user = await User.findOne({ id: id });
-    return { status: 'ok' /*quote: user.quote */ };
+    return { status: "ok" /*quote: user.quote */ };
   } catch (error) {
     console.log(error);
-    res.json({ status: 'error', error: 'invalid token' });
+    res.json({ status: "error", error: "invalid token" });
   }
 
   const user = await User.findOne({
@@ -109,18 +118,18 @@ app.get('/login', async (req, res) => {
       `scret${dotenv.JWT_SCRET}`
     );
     return res.json({
-      status: 'ok',
+      status: "ok",
       user: token,
     });
   } else {
     return res.json({
-      status: 'error',
+      status: "error",
       user: false,
     });
   }
 });
 
-app.get('/mainpage', async (req, res) => {
+app.get("/mainpage", async (req, res) => {
   const user = await User.findOne({
     id: req.body.id,
     password: req.body.password,
@@ -137,19 +146,19 @@ app.get('/mainpage', async (req, res) => {
       `scret${dotenv.JWT_SCRET}`
     );
     return res.json({
-      status: 'ok',
+      status: "ok",
       user: token,
     });
   } else {
     return res.json({
-      status: 'error',
+      status: "error",
       user: false,
     });
   }
 });
 
-app.post('/mainpage', async (req, res) => {
-  const token = req.headers['x-acces-token'];
+app.post("/mainpage", async (req, res) => {
+  const token = req.headers["x-acces-token"];
 
   try {
     const decoded = jwt.verify(token, `scret${dotenv.JWT_SCRET}`);
@@ -158,9 +167,9 @@ app.post('/mainpage', async (req, res) => {
       { id: id }
       // { $set: { quote: req.body.quote } }
     );
-    return { status: 'ok' };
+    return { status: "ok" };
   } catch (error) {
     console.log(error);
-    res.json({ status: 'error', error: 'invalid token' });
+    res.json({ status: "error", error: "invalid token" });
   }
 });
