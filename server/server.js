@@ -8,12 +8,6 @@ const mongoose = require("mongoose");
 const User = require("./models/user.models");
 const jwt = require("jsonwebtoken");
 
-// const generateToken = (id) => {
-//   return jwt.sign({ id }, process.env.JWT_SCRET, {
-//     expiresIn: '30d',
-//   });
-// };
-
 app.use(express.json());
 app.use(
   cors({
@@ -61,11 +55,17 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SCRET, {
+    expiresIn: "30d",
+  });
+};
+
 app.post("/login", async (req, res) => {
   const user = await User.findOne({
     id: req.body.id,
     password: req.body.password,
-    // token: generateToken(req.body.id),
+    token: generateToken(req.body.id),
   });
 
   if (user) {
