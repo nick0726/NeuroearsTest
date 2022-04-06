@@ -32,9 +32,9 @@ mongoose.connect(
 );
 
 const http = require("http").createServer(app);
-// http.listen(port, () => {
-//   console.log(`${port}에 포트열림 서버 오픈 완료`);
-// });
+http.listen(port, () => {
+  console.log(`${port}에 서버 오픈 완료`);
+});
 
 app.use("/", express.static(path.join(__dirname, "../client/build")));
 
